@@ -1,6 +1,6 @@
 
 /* CCExtractor, originally by carlos at ccextractor.org, now a lot of people.
-Credits: See CHANGES.TXT
+Credits: See AUTHORS.TXT
 License: GPL 2.0
 */
 #include "ccextractor.h"
@@ -569,7 +569,6 @@ void run(PyObject * reporter, char * line, int encoding)
        PyObject_CallObject((PyObject*)reporter, args);
 }
 #endif
-
 int main(int argc, char* argv[])
 {
     struct ccx_s_options* api_options = api_init_options();

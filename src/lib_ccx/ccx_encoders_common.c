@@ -1,7 +1,5 @@
 #include "ccx_decoders_common.h"
 #include "ccx_encoders_common.h"
-#include "spupng_encoder.h"
-#include "ccx_encoders_spupng.h"
 #include "utility.h"
 #include "ocr.h"
 #include "ccx_decoders_608.h"
@@ -1417,4 +1415,20 @@ unsigned int get_font_encoded(struct encoder_ctx *ctx, unsigned char *buffer, in
 			*buffer++ = 'E';
 	}
 	return (unsigned)(buffer - orig); // Return length
+}
+
+void switch_output_file(struct lib_ccx_ctx *ctx, struct encoder_ctx *enc_ctx, int track_id) {
+	if (enc_ctx->out->filename != NULL) { // Close and release the previous handle
+		free(enc_ctx->out->filename);
+		close(enc_ctx->out->fh);
+	}
+	char *ext = get_file_extension(ctx->write_format);
+	char suffix[32];
+	sprintf(suffix, "_%d", track_id);
+	enc_ctx->out->filename = create_outfilename(get_basename(enc_ctx->first_input_file), suffix, ext);
+	enc_ctx->out->fh = open(enc_ctx->out->filename, O_RDWR | O_CREAT | O_TRUNC | O_BINARY, S_IREAD | S_IWRITE);
+
+	// Reset counters as we switch output file.
+	enc_ctx->cea_708_counter = 0;
+	enc_ctx->srt_counter = 0;
 }

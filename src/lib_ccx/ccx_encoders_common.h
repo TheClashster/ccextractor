@@ -17,6 +17,10 @@
 if (ctx->buffer == NULL) { fatal(EXIT_NOT_ENOUGH_MEMORY, "Not enough memory for reallocating buffer, bailing out\n"); } \
 }
 
+// CC page dimensions
+#define ROWS                    15
+#define COLUMNS                 32
+
 typedef struct ccx_dtvcc_writer_ctx
 {
 	int fd;
@@ -170,6 +174,7 @@ int write_cc_buffer_as_ssa            (struct eia608_screen *data, struct encode
 int write_cc_buffer_as_webvtt         (struct eia608_screen *data, struct encoder_ctx *context);
 int write_cc_buffer_as_sami           (struct eia608_screen *data, struct encoder_ctx *context);
 int write_cc_buffer_as_smptett        (struct eia608_screen *data, struct encoder_ctx *context);
+int write_cc_buffer_as_spupng         (struct eia608_screen *data, struct encoder_ctx *context);
 void write_cc_buffer_to_gui           (struct eia608_screen *data, struct encoder_ctx *context);
 
 int write_cc_buffer_as_g608           (struct eia608_screen *data, struct encoder_ctx *context);
@@ -202,6 +207,9 @@ int write_cc_bitmap_as_spupng          (struct cc_subtitle *sub, struct encoder_
 int write_cc_bitmap_as_transcript      (struct cc_subtitle *sub, struct encoder_ctx *context);
 int write_cc_bitmap_as_libcurl         (struct cc_subtitle *sub, struct encoder_ctx *context);
 
+void write_spumux_header(struct encoder_ctx *ctx, struct ccx_s_write *out);
+void write_spumux_footer(struct ccx_s_write *out);
+
 struct cc_subtitle * reformat_cc_bitmap_through_sentence_buffer (struct cc_subtitle *sub, struct encoder_ctx *context);
 
 void set_encoder_last_displayed_subs_ms(struct encoder_ctx *ctx, LLONG last_displayed_subs_ms);
@@ -220,4 +228,7 @@ unsigned int get_line_encoded(struct encoder_ctx *ctx, unsigned char *buffer, in
 unsigned int get_color_encoded(struct encoder_ctx *ctx, unsigned char *buffer, int line_num, struct eia608_screen *data);
 unsigned int get_font_encoded(struct encoder_ctx *ctx, unsigned char *buffer, int line_num, struct eia608_screen *data);
 int pass_cc_buffer_to_python(struct eia608_screen *data, struct encoder_ctx *context);
+
+struct lib_ccx_ctx;
+void switch_output_file(struct lib_ccx_ctx *ctx, struct encoder_ctx *enc_ctx, int track_id);
 #endif
